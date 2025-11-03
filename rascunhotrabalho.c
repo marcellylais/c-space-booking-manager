@@ -4,7 +4,7 @@
 int main()
 {
     printf("Escolha uma opcao:\n");
-    printf("1- Areas Comuns\n2- Solicitar Reserva\n3- Relatorio\n");
+    printf("1- Areas Comuns\n2- Solicitar Reserva\n3- Relatorio\nmaisumteste");
 
     return 0;
 }
