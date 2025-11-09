@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <string.h> /* Para manipulação de strings*/
 #include <stdlib.h> /* Para malloc e free*/
+#include <time.h> /* Para manipulação de datas e horas*/
   
 typedef struct 
 { 
@@ -237,6 +238,96 @@ void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespac
            novo->data_agendamento.ano);
 }
 
+/* Remove um nó agendamento da lista;
+ * 'noParaApagar' é o ponteiro direto para o nó a ser removido.
+ * (Assume que 'noParaApagar' NUNCA é o nó-cabeça).*/
+void removeAgendamento(agendamento *noParaApagar)
+{
+    if (noParaApagar == NULL)
+    {
+        return;
+    }
+
+    /* O nó anterior a ele agora aponta para o próximo */
+    noParaApagar->ant->prox = noParaApagar->prox;
+
+    /* O anterior ao nó seguinte (se existir) agora aponta para o anterior do 'noParaApagar'*/
+    if (noParaApagar->prox != NULL)
+    {
+        noParaApagar->prox->ant = noParaApagar->ant;
+    }
+
+    printf("\nAgendamento para %02d/%02d/%d da unidade %d no espaço %d removido com sucesso!\n",
+           noParaApagar->data_agendamento.dia,
+           noParaApagar->data_agendamento.mes,
+           noParaApagar->data_agendamento.ano,
+           noParaApagar->unidade_solicitante,
+           noParaApagar->id_do_espaco);
+    /* Libera a memória do nó removido */
+    free(noParaApagar);
+}
+
+/* Lista todos os agendamentos cadastrados e oferece a opção de
+ * cancelar um deles selecionando pelo índice.*/
+void consultarECancelarAgendamento(agendamento *listaCabeca) {
+    agendamento *atual = listaCabeca->prox; /* Pula o nó-cabeça */
+    int contador = 1, numeroParaCancelar, totalItens = 0 /* Para contar o total de agendamentos */; 
+
+    printf("\n== Consultar / Cancelar Agendamentos ==\n");
+
+    /* Lista todos os agendamentos */
+    if (atual == NULL) {
+        printf("Nenhum agendamento cadastrado no sistema.\n");
+        return; /* Sai da função se a lista está vazia */
+    }
+
+    printf("Lista de Agendamentos (Ordenados por Data):\n");
+    while (atual != NULL) {
+        /* Imprime os dados que estão na struct agendamento */
+        printf("  [%d] Data: %02d/%02d/%d | Unidade Solicitante: %d | ID Espaco: %d\n",
+               contador,
+               atual->data_agendamento.dia,
+               atual->data_agendamento.mes,
+               atual->data_agendamento.ano,
+               atual->unidade_solicitante,
+               atual->id_do_espaco);
+        
+        atual = atual->prox;
+        contador++;
+    }
+
+    /* Guarda o número total de itens que foram listados */
+    totalItens = contador - 1; 
+
+    /* Pede ao usuário para escolher qual cancelar */
+    printf("\nDigite o numero do agendamento para CANCELAR (ou 0 para voltar): \n");
+    scanf("%d", &numeroParaCancelar);
+
+    /* Validação da escolha do usuário */
+    if (numeroParaCancelar == 0) {
+        return; /* Usuário quer voltar */
+    }
+
+    /* Checa se o número é válido (não menor que 1 e não maior que o total) */
+    if (numeroParaCancelar < 1 || numeroParaCancelar > totalItens) {
+        printf("ERRO: Numero invalido. Nenhum agendamento foi cancelado.\n");
+        return;
+    }
+
+    /* Se o número é válido, acha o N-ésimo nó para remover */
+    atual = listaCabeca->prox; /* Reinicia a busca do início */
+    contador = 1; /* Reinicia o contador */
+
+    /* Anda na lista até parar no nó escolhido */
+    while (contador < numeroParaCancelar) {
+        atual = atual->prox;
+        contador++;
+    }
+
+    /* 'atual' agora é o ponteiro para o nó que o usuário quer apagar */
+    removeAgendamento(atual); /* Chama a função de remoção */
+}
+
 /* Exibe o menu de agendamentos e chama as funções correspondentes.*/
 void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos) 
 {
@@ -257,7 +348,8 @@ void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos
                 cadastrarNovoAgendamento(lista_agendamentos, listarespacos);
                 break;
             case 2:
-                /* code */
+                /*Chama a função de consulta e cancelamento*/
+                consultarECancelarAgendamento(lista_agendamentos);
                 break;
             case 3:
                 /* code */
