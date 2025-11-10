@@ -461,6 +461,72 @@ void consultarECancelarAgendamento(agendamento *listaCabeca) {
     removeAgendamento(atual); /* Chama a função de remoção */
 }
 
+/* AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+ * Pede um ID, busca o espaço, e permite alterar campos
+ * especificos atraves de um sub-menu.
+ */
+void alterarEspaco(espacocomum *listaCabeca) {
+    int idTemp;
+    espacocomum *noParaAlterar;
+    int opcaoAlterar; /* Variavel para o sub-menu */
+
+    printf("\n== Alterar Espaco ==\n");
+    /* 1. Pessoa digita o ID do espaco */
+    printf("Digite o ID do espaco que deseja alterar (ou 0 para cancelar): ");
+    scanf("%d", &idTemp);
+
+    if (idTemp == 0) {
+        return; /* Sai da função */
+    }
+
+    /* Busca o nó */
+    noParaAlterar = buscarEspacoPorID(listaCabeca, idTemp);
+
+    if (noParaAlterar == NULL) {
+        printf("ERRO: Espaco com ID %d nao encontrado.\n", idTemp);
+        return;
+    }
+
+    /* 2. Se encontrou, inicia o sub-menu */
+    do {
+        /* Informa o espaço a ser alterado e mostra as opções */
+        printf("\n--- Alterando Espaco (ID: %d) ---\n", noParaAlterar->id_espaco);
+        printf(" [1] Nome: \t\t%s\n", noParaAlterar->nome);
+        printf(" [2] Descricao: \t%s\n", noParaAlterar->descricao);
+        printf(" [3] Capacidade: \t%d pessoas\n", noParaAlterar->capacidade);
+        printf(" [0] Concluir (Cancelar operacao de alteracao)\n");
+        printf("----------------------------------\n");
+        printf("Qual campo deseja alterar? ");
+        scanf("%d", &opcaoAlterar);
+
+        /* 3. A pessoa decide e pode digitar a alteração */
+        switch (opcaoAlterar) {
+            case 1:
+                printf("Digite o NOVO Nome: ");
+                scanf(" %[^\n]", noParaAlterar->nome); 
+                printf("Nome alterado.\n");
+                break;
+            case 2:
+                printf("Digite a NOVA Descricao: ");
+                scanf(" %[^\n]", noParaAlterar->descricao);
+                printf("Descricao alterada.\n");
+                break;
+            case 3:
+                printf("Digite a NOVA Capacidade: ");
+                scanf("%d", &noParaAlterar->capacidade);
+                printf("Capacidade alterada.\n");
+                break;
+            case 0:
+                printf("Alteracoes concluidas para o ID %d.\n", idTemp);
+                break;
+            default:
+                printf("Opcao invalida. Tente novamente.\n");
+                break;
+        }
+
+    } while (opcaoAlterar != 0); /* O loop continua até o usuário digitar 0 */
+}
+
 /* Exibe o menu de agendamentos e chama as funções correspondentes.*/
 void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos) 
 {
@@ -561,7 +627,8 @@ void menuEspacos(espacocomum *lista_espacos)
                 cadastrarNovoEspaco(lista_espacos);
                 break;
             case 2:
-                /*alterarEspaco(lista_espacos);*/
+                /* Chama a função de alterar espaço */
+                alterarEspaco(lista_espacos);
                 break;
             case 3:
                 /* Chama a função de listar todos os espaços */
