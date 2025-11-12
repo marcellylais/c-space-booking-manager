@@ -1,20 +1,20 @@
 /************************************************
 *                                               *
 * Nome: Marcelly Lais Ferreira de Almeida       *
-* Trabalho Prático                              *
-* Disciplinas: Algoritmos e Programação II      *
-* Laboratório de Algoritmos e Programação II    *
+* Trabalho Pr?tico                              *
+* Disciplinas: Algoritmos e Programa??o II      *
+* Laborat?rio de Algoritmos e Programa??o II    *
 * Professores: Ivone e Ronaldo                  *
 * Data: 14/11/2025                              *
-* Versão: 1                                     *
-* Descrição:                                    *
+* Vers?o: 1                                     *
+* Descri??o:                                    *
 *                                               *
 *************************************************/
 
 #include <stdio.h> 
-#include <string.h> /* Para manipulação de strings*/
+#include <string.h> /* Para manipula??o de strings*/
 #include <stdlib.h> /* Para malloc e free*/
-#include <time.h> /* Para manipulação de datas e horas*/
+#include <time.h> /* Para manipula??o de datas e horas*/
   
 typedef struct 
 { 
@@ -52,40 +52,40 @@ typedef struct agendamento
     struct agendamento *prox;
 } agendamento;
 
-/*Criação de nó "cabeça" para a lista de espaços*/
+/*Cria??o de n? "cabe?a" para a lista de espa?os*/
 espacocomum* criaListaEspacos()
 {
-    /*Aloca memória para a cabeça*/
+    /*Aloca mem?ria para a cabe?a*/
     espacocomum *no = (espacocomum*) malloc(sizeof(espacocomum));
     
     if (no != NULL) {
-        /*A lista começa vazia, apontando para nada dos dois lados.*/
+        /*A lista come?a vazia, apontando para nada dos dois lados.*/
         no->prox = NULL;
         no->ant = NULL; 
     }
     return no;
 }
 
-/* Cria e retorna o nó para uma lista de agendamentos.*/
+/* Cria e retorna o n? para uma lista de agendamentos.*/
 agendamento* criaListaAgendamentos() {
-    /*Aloca memória para a cabeça*/
+    /*Aloca mem?ria para a cabe?a*/
     agendamento *no = (agendamento*) malloc(sizeof(agendamento));
     
     if (no != NULL) {
-        /* A lista começa vazia, apontando para nada dos dois lados.*/
+        /* A lista come?a vazia, apontando para nada dos dois lados.*/
         no->prox = NULL;
         no->ant = NULL; 
     }
     return no;
 }
 
-/* Cria e retorna o nó para uma lista de solicitantes.*/
+/* Cria e retorna o n? para uma lista de solicitantes.*/
 solicitante* criaListaSolicitantes() {
-    /* Aloca memória para a cabeça*/
+    /* Aloca mem?ria para a cabe?a*/
     solicitante *no = (solicitante*) malloc(sizeof(solicitante));
     
     if (no != NULL) {
-        /* A lista começa vazia, apontando para nada dos dois lados.*/
+        /* A lista come?a vazia, apontando para nada dos dois lados.*/
         no->prox = NULL;
         no->ant = NULL; 
     }
@@ -104,7 +104,7 @@ int compararDatas(data data1, data data2)
     if (data1.ano < data2.ano) return -1;
     if (data1.ano > data2.ano) return 1;
 
-    /* Anos iguais, checa o mês*/
+    /* Anos iguais, checa o m?s*/
     if (data1.mes < data2.mes) return -1;
     if (data1.mes > data2.mes) return 1;
 
@@ -112,16 +112,16 @@ int compararDatas(data data1, data data2)
     if (data1.dia < data2.dia) return -1;
     if (data1.dia > data2.dia) return 1;
 
-    return 0; /* São iguais*/
+    return 0; /* S?o iguais*/
 }
 
-/* Verifica se um espaço já está ocupado em uma data específica.
+/* Verifica se um espa?o j? est? ocupado em uma data espec?fica.
  * Retorna 1 se estiver LIVRE.
  * Retorna 0 se estiver OCUPADO.
  */
 int verificarDisponibilidade(agendamento *lst, int idEspaco, data dataCheck)
 {
-    /*Começa a busca no PRIMEIRO NÓ DE DADOS (pula o nó-cabeça)*/
+    /*Come?a a busca no PRIMEIRO N? DE DADOS (pula o n?-cabe?a)*/
     agendamento *atual = lst->prox;
 
     /* Verifica a lista de agendamentos */
@@ -130,37 +130,37 @@ int verificarDisponibilidade(agendamento *lst, int idEspaco, data dataCheck)
         /*Compara a data do agendamento 'atual' com a data que queremos (dataCheck)*/
         int comp = compararDatas(atual->data_agendamento, dataCheck);
 
-        /*As datas são IDÊNTICAS*/
+        /*As datas s?o ID?NTICAS*/
         if (comp == 0)
         {
-            /*Se as datas são iguais, checa se o ESPAÇO também é igual*/
+            /*Se as datas s?o iguais, checa se o ESPA?O tamb?m ? igual*/
             if (atual->id_do_espaco == idEspaco)
             {
                 return 0; /* OCUPADO!*/
             }
-            /*Se as datas são iguais, mas o espaço é outro,
+            /*Se as datas s?o iguais, mas o espa?o ? outro,
             continuamos procurando (pode ter outro agendamento na msm data)*/ 
         } 
         
-        /*2. A data do 'atual' já é MAIOR que a data que buscamos*/
+        /*2. A data do 'atual' j? ? MAIOR que a data que buscamos*/
         else if (comp > 0)
         {
-            /*Como a lista está ordenada, já passamos do ponto.*/
-            /* Não há mais como achar a data.*/
+            /*Como a lista est? ordenada, j? passamos do ponto.*/
+            /* N?o h? mais como achar a data.*/
             return 1; /*LIVRE!*/
         }
 
-        /* Se comp < 0, a data do 'atual' é antiga. Continua para o próximo.*/
+        /* Se comp < 0, a data do 'atual' ? antiga. Continua para o pr?ximo.*/
         atual = atual->prox;
     }
 
-    /* Se o loop terminou (chegou ao fim da lista), não achamos nada.*/
+    /* Se o loop terminou (chegou ao fim da lista), n?o achamos nada.*/
     return 1; /*LIVRE!*/ 
 }
 
-/* Insere um novo agendamento na lista (com cabeça),
+/* Insere um novo agendamento na lista (com cabe?a),
  * mantendo a ordem crescente pela 'data_agendamento'.
- * no é o ponteiro para o nó cabeça.
+ * no ? o ponteiro para o n? cabe?a.
  */
 void insereAgendamentoOrdenado(agendamento *no, agendamento *novoAgendamento)
 {
@@ -170,14 +170,14 @@ void insereAgendamentoOrdenado(agendamento *no, agendamento *novoAgendamento)
     novoAgendamento->prox = NULL;
     novoAgendamento->ant = NULL;
 
-    /*Procura a posição*/ 
+    /*Procura a posi??o*/ 
     while (atual != NULL && compararDatas(novoAgendamento->data_agendamento, atual->data_agendamento) > 0)
     {
         anterior = atual;
         atual = atual->prox;
     }
 
-    /* Novo agendamento será inserido entre 'anterior' e 'atual'*/
+    /* Novo agendamento ser? inserido entre 'anterior' e 'atual'*/
     novoAgendamento->prox = atual;
     novoAgendamento->ant = anterior;
     anterior->prox = novoAgendamento;
@@ -186,7 +186,7 @@ void insereAgendamentoOrdenado(agendamento *no, agendamento *novoAgendamento)
     }
 }
 
-/* Insere um novo espaco na lista (com cabeça), mantendo a ordem crescente pelo 'id_espaco'*/
+/* Insere um novo espaco na lista (com cabe?a), mantendo a ordem crescente pelo 'id_espaco'*/
 void insereEspacoOrdenado(espacocomum *listaCabeca, espacocomum *novoEspaco)
 {
     espacocomum *anterior = listaCabeca; 
@@ -195,14 +195,14 @@ void insereEspacoOrdenado(espacocomum *listaCabeca, espacocomum *novoEspaco)
     novoEspaco->prox = NULL;
     novoEspaco->ant = NULL;
 
-    /*Procura a posição*/ 
+    /*Procura a posi??o*/ 
     while (atual != NULL && novoEspaco->id_espaco > atual->id_espaco)
     {
         anterior = atual;
         atual = atual->prox;
     }
 
-    /* Novo agendamento será inserido entre 'anterior' e 'atual'*/
+    /* Novo agendamento ser? inserido entre 'anterior' e 'atual'*/
     novoEspaco->prox = atual;
     novoEspaco->ant = anterior;
     anterior->prox = novoEspaco;
@@ -213,11 +213,11 @@ void insereEspacoOrdenado(espacocomum *listaCabeca, espacocomum *novoEspaco)
     }
 }
 
-/* Busca um espaco pelo ID, retorna um ponteiro para o nó se achar e retorna NULL se não achar.*/
+/* Busca um espaco pelo ID, retorna um ponteiro para o n? se achar e retorna NULL se n?o achar.*/
 espacocomum* buscarEspacoPorID(espacocomum *listaCabeca, int idBusca)
 {
-    espacocomum *atual = listaCabeca->prox; /* Pula o nó-cabeça */
-    int continuarProcurando = 1; /*variavel de parada acaso já encontrar espaço*/
+    espacocomum *atual = listaCabeca->prox; /* Pula o n?-cabe?a */
+    int continuarProcurando = 1; /*variavel de parada acaso j? encontrar espa?o*/
 
     while (atual != NULL && continuarProcurando == 1)
     {
@@ -229,7 +229,7 @@ espacocomum* buscarEspacoPorID(espacocomum *listaCabeca, int idBusca)
         
         if (atual->id_espaco > idBusca)
         {
-            /* A ID do 'atual' já é maior que a ID buscada, como a lista é ordenada, não será encontrado*/
+            /* A ID do 'atual' j? ? maior que a ID buscada, como a lista ? ordenada, n?o ser? encontrado*/
             continuarProcurando = 0;
         }
 
@@ -239,14 +239,14 @@ espacocomum* buscarEspacoPorID(espacocomum *listaCabeca, int idBusca)
         }
     }
 
-    /* Se saiu do loop não encontrou */
+    /* Se saiu do loop n?o encontrou */
     return NULL; 
 }
 
-/* Mostra uma lista com ID e Nome de todos os espaços cadastrados. */
+/* Mostra uma lista com ID e Nome de todos os espa?os cadastrados. */
 void listarEspacosSimples(espacocomum *listaCabeca)
 {
-    espacocomum *atual = listaCabeca->prox; /* Começa no primeiro item após cabeça */
+    espacocomum *atual = listaCabeca->prox; /* Come?a no primeiro item ap?s cabe?a */
 
     if (atual == NULL) {
         printf("\nAVISO: Nenhum espaco comum foi cadastrado ainda.\n");
@@ -255,31 +255,31 @@ void listarEspacosSimples(espacocomum *listaCabeca)
 
     printf("\n--- Espacos Disponiveis ---\n");
     while (atual != NULL) {
-        printf("  ID: %d - Nome: %s - Descrição: %s - Capacidade: %d\n", atual->id_espaco, atual->nome, atual->descricao, atual->capacidade);
+        printf("  ID: %d - Nome: %s - Descri??o: %s - Capacidade: %d\n", atual->id_espaco, atual->nome, atual->descricao, atual->capacidade);
         atual = atual->prox;
     }
     printf("---------------------------\n");
 }
 
-/* Função principal para cadastrar um novo agendamento.
- * Pede os dados ao usuário, VERIFICA, aloca memória e insere na lista se disponivel.
+/* Fun??o principal para cadastrar um novo agendamento.
+ * Pede os dados ao usu?rio, VERIFICA, aloca mem?ria e insere na lista se disponivel.
  */
 void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespacos)
 {   
-    /* Aloca memória para o novo nó*/
+    /* Aloca mem?ria para o novo n?*/
     agendamento *novo = (agendamento*) malloc(sizeof(agendamento));
-    if (novo == NULL) /*verificação se memória foi alocada*/
+    if (novo == NULL) /*verifica??o se mem?ria foi alocada*/
     {
         printf("ERRO: Falha de alocacao de memoria!\n");
         return; 
     }
 
-    /*Coleta os dados do usuário*/
+    /*Coleta os dados do usu?rio*/
     printf("\n== Novo Agendamento ==\n");
     printf("\nDigite a unidade do solicitante:\n");
     scanf("%d", &novo->unidade_solicitante);
 
-    /* Mostra a lista de espaços para o usuário */
+    /* Mostra a lista de espa?os para o usu?rio */
     listarEspacosSimples(listarespacos);
 
     printf("Digite o ID do espaco desejado: ");
@@ -288,11 +288,11 @@ void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespac
     printf("\nDigite a data do agendamento (DD/MM/AAAA):\n");
     scanf("%d/%d/%d", &novo->data_agendamento.dia, &novo->data_agendamento.mes, &novo->data_agendamento.ano);
     
-    /*Verifica se o espaço está disponível na data desejada*/
+    /*Verifica se o espa?o est? dispon?vel na data desejada*/
     if (verificarDisponibilidade(listaCabeca, novo->id_do_espaco, novo->data_agendamento) == 0)
     {
-        /*Se a função retornar 0, está ocupado.*/ 
-        printf("\nERRO: O espaco %d já esta reservado no dia %02d/%02d/%d.\n", novo->id_do_espaco,
+        /*Se a fun??o retornar 0, est? ocupado.*/ 
+        printf("\nERRO: O espaco %d j? esta reservado no dia %02d/%02d/%d.\n", novo->id_do_espaco,
                novo->data_agendamento.dia,
                novo->data_agendamento.mes,
                novo->data_agendamento.ano);
@@ -300,7 +300,7 @@ void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespac
         return;
     }
     
-    /* Está livre. Insere o nó na lista ordenada.*/
+    /* Est? livre. Insere o n? na lista ordenada.*/
     insereAgendamentoOrdenado(listaCabeca, novo);
 
     printf("\nAgendamento para %02d/%02d/%d cadastrado com sucesso!\n",
@@ -312,24 +312,24 @@ void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespac
 /* Lista todos os agendamentos entre duas datas (inclusive).*/
 void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, data dataFim)
 {
-    agendamento *atual = listaCabeca->prox; /* Pula o nó-cabeça */
+    agendamento *atual = listaCabeca->prox; /* Pula o n?-cabe?a */
     int encontrou = 0;
 
-    /* Imprime o cabeçalho do relatório */
+    /* Imprime o cabe?alho do relat?rio */
     printf("\n== Relatorio de Agendamentos de %02d/%02d/%d ate %02d/%02d/%d ==\n",
            dataInicio.dia, dataInicio.mes, dataInicio.ano,
            dataFim.dia, dataFim.mes, dataFim.ano);
 
     while (atual != NULL)
     {
-        /* Compara a data do 'atual' com o INÍCIO do período */
+        /* Compara a data do 'atual' com o IN?CIO do per?odo */
         int comp_inicio = compararDatas(atual->data_agendamento, dataInicio);
         
-        /* Compara a data do 'atual' com o FIM do período */
+        /* Compara a data do 'atual' com o FIM do per?odo */
         int comp_fim = compararDatas(atual->data_agendamento, dataFim);
 
         /* Se comp_inicio >= 0 (data >= inicio) E comp_fim <= 0 (data <= fim),
-         * então o agendamento está DENTRO do período.*/
+         * ent?o o agendamento est? DENTRO do per?odo.*/
         if (comp_inicio >= 0 && comp_fim <= 0)
         {
             printf("  - Data: %02d/%02d/%d | Unidade: %d | Espaco: %d\n",
@@ -341,8 +341,8 @@ void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, dat
             encontrou = 1;
         } 
 
-        /* Se a data do 'atual' já é MAIOR que a data FIM,
-        * como a lista é ordenada, podemos parar a busca.*/
+        /* Se a data do 'atual' j? ? MAIOR que a data FIM,
+        * como a lista ? ordenada, podemos parar a busca.*/
         else if (comp_fim > 0)
         {
             if (encontrou == 0)
@@ -351,11 +351,11 @@ void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, dat
             }
         }
 
-        /* Se comp_inicio < 0, a data é anterior ao período, continua */
+        /* Se comp_inicio < 0, a data ? anterior ao per?odo, continua */
         atual = atual->prox;
     }
 
-    /*acaso o usuário coloque uma data de fim que seja mais dos agendamentos já feitos*/
+    /*acaso o usu?rio coloque uma data de fim que seja mais dos agendamentos j? feitos*/
     if (encontrou == 0)
     {
         printf("Nenhum agendamento encontrado neste periodo.\n");
@@ -364,7 +364,7 @@ void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, dat
 }
 
 /* Lista todos os agendamentos marcados para a data ATUAL do sistema.
- * A função descobre a data de "hoje" e chama a funcao 'listarAgendamentosPorPeriodo'. */
+ * A fun??o descobre a data de "hoje" e chama a funcao 'listarAgendamentosPorPeriodo'. */
 void verCalendarioDoDia(agendamento *listaCabeca)
 {
     time_t tempo_bruto;
@@ -377,16 +377,16 @@ void verCalendarioDoDia(agendamento *listaCabeca)
 
     /* Converte para a nossa struct 'data' */
     data_hoje.dia = info_tempo->tm_mday;
-    data_hoje.mes = info_tempo->tm_mon + 1;     /* tm_mon é 0-11, por isso +1 */
-    data_hoje.ano = info_tempo->tm_year + 1900; /* tm_year é anos desde 1900 */
+    data_hoje.mes = info_tempo->tm_mon + 1;     /* tm_mon ? 0-11, por isso +1 */
+    data_hoje.ano = info_tempo->tm_year + 1900; /* tm_year ? anos desde 1900 */
 
     /* Chama a busca por periodo, usando HOJE como data de inicio E data de fim.*/
     listarAgendamentosPorPeriodo(listaCabeca, data_hoje, data_hoje);
 }
 
-/* Remove um nó agendamento da lista;
- * 'noParaApagar' é o ponteiro direto para o nó a ser removido.
- * (Assume que 'noParaApagar' NUNCA é o nó-cabeça).*/
+/* Remove um n? agendamento da lista;
+ * 'noParaApagar' ? o ponteiro direto para o n? a ser removido.
+ * (Assume que 'noParaApagar' NUNCA ? o n?-cabe?a).*/
 void removeAgendamento(agendamento *noParaApagar)
 {
     if (noParaApagar == NULL)
@@ -394,29 +394,29 @@ void removeAgendamento(agendamento *noParaApagar)
         return;
     }
 
-    /* O nó anterior a ele agora aponta para o próximo */
+    /* O n? anterior a ele agora aponta para o pr?ximo */
     noParaApagar->ant->prox = noParaApagar->prox;
 
-    /* O anterior ao nó seguinte (se existir) agora aponta para o anterior do 'noParaApagar'*/
+    /* O anterior ao n? seguinte (se existir) agora aponta para o anterior do 'noParaApagar'*/
     if (noParaApagar->prox != NULL)
     {
         noParaApagar->prox->ant = noParaApagar->ant;
     }
 
-    printf("\nAgendamento para %02d/%02d/%d da unidade %d no espaço %d cancelado com sucesso!\n",
+    printf("\nAgendamento para %02d/%02d/%d da unidade %d no espa?o %d cancelado com sucesso!\n",
            noParaApagar->data_agendamento.dia,
            noParaApagar->data_agendamento.mes,
            noParaApagar->data_agendamento.ano,
            noParaApagar->unidade_solicitante,
            noParaApagar->id_do_espaco);
-    /* Libera a memória do nó removido */
+    /* Libera a mem?ria do n? removido */
     free(noParaApagar);
 }
 
-/* Lista todos os agendamentos cadastrados e oferece a opção de
- * cancelar um deles selecionando pelo índice.*/
+/* Lista todos os agendamentos cadastrados e oferece a op??o de
+ * cancelar um deles selecionando pelo ?ndice.*/
 void consultarECancelarAgendamento(agendamento *listaCabeca) {
-    agendamento *atual = listaCabeca->prox; /* Pula o nó-cabeça */
+    agendamento *atual = listaCabeca->prox; /* Pula o n?-cabe?a */
     int contador = 1, numeroParaCancelar, totalItens = 0 /* Para contar o total de agendamentos */; 
 
     printf("\n== Consultar / Cancelar Agendamentos ==\n");
@@ -424,12 +424,12 @@ void consultarECancelarAgendamento(agendamento *listaCabeca) {
     /* Lista todos os agendamentos */
     if (atual == NULL) {
         printf("Nenhum agendamento cadastrado no sistema.\n");
-        return; /* Sai da função se a lista está vazia */
+        return; /* Sai da fun??o se a lista est? vazia */
     }
 
     printf("Lista de Agendamentos (Ordenados por Data):\n");
     while (atual != NULL) {
-        /* Imprime os dados que estão na struct agendamento */
+        /* Imprime os dados que est?o na struct agendamento */
         printf("  [%d] Data: %02d/%02d/%d | Unidade Solicitante: %d | ID Espaco: %d\n",
                contador,
                atual->data_agendamento.dia,
@@ -442,39 +442,39 @@ void consultarECancelarAgendamento(agendamento *listaCabeca) {
         contador++;
     }
 
-    /* Guarda o número total de itens que foram listados */
+    /* Guarda o n?mero total de itens que foram listados */
     totalItens = contador - 1; 
 
-    /* Pede ao usuário para escolher qual cancelar */
+    /* Pede ao usu?rio para escolher qual cancelar */
     printf("\nDigite o numero do agendamento para CANCELAR (ou 0 para voltar): \n");
     scanf("%d", &numeroParaCancelar);
 
-    /* Validação da escolha do usuário */
+    /* Valida??o da escolha do usu?rio */
     if (numeroParaCancelar == 0) {
-        return; /* Usuário quer voltar */
+        return; /* Usu?rio quer voltar */
     }
 
-    /* Checa se o número é válido (não menor que 1 e não maior que o total) */
+    /* Checa se o n?mero ? v?lido (n?o menor que 1 e n?o maior que o total) */
     if (numeroParaCancelar < 1 || numeroParaCancelar > totalItens) {
         printf("ERRO: Numero invalido. Nenhum agendamento foi cancelado.\n");
         return;
     }
 
-    /* Se o número é válido, acha o N-ésimo nó para remover */
-    atual = listaCabeca->prox; /* Reinicia a busca do início */
+    /* Se o n?mero ? v?lido, acha o N-?simo n? para remover */
+    atual = listaCabeca->prox; /* Reinicia a busca do in?cio */
     contador = 1; /* Reinicia o contador */
 
-    /* Anda na lista até parar no nó escolhido */
+    /* Anda na lista at? parar no n? escolhido */
     while (contador < numeroParaCancelar) {
         atual = atual->prox;
         contador++;
     }
 
-    /* 'atual' agora é o ponteiro para o nó que o usuário quer apagar */
-    removeAgendamento(atual); /* Chama a função de remoção */
+    /* 'atual' agora ? o ponteiro para o n? que o usu?rio quer apagar */
+    removeAgendamento(atual); /* Chama a fun??o de remo??o */
 }
 
-/* Pede um ID, busca o espaço, e permite alterar campos especificos atraves de um sub-menu. */
+/* Pede um ID, busca o espa?o, e permite alterar campos especificos atraves de um sub-menu. */
 void alterarEspaco(espacocomum *listaCabeca)
 {
     int idespaco;
@@ -488,10 +488,10 @@ void alterarEspaco(espacocomum *listaCabeca)
 
     if (idespaco == 0)
     {
-        return; /* Sai da função */
+        return; /* Sai da fun??o */
     }
 
-    /* Busca o nó */
+    /* Busca o n? */
     noParaAlterar = buscarEspacoPorID(listaCabeca, idespaco);
 
     if (noParaAlterar == NULL)
@@ -500,10 +500,10 @@ void alterarEspaco(espacocomum *listaCabeca)
         return;
     }
 
-    /* Se encontrou, inicia o sub-menu de alteração */
+    /* Se encontrou, inicia o sub-menu de altera??o */
     do
     {
-        /* Informa o espaço a ser alterado e mostra as opções */
+        /* Informa o espa?o a ser alterado e mostra as op??es */
         printf("\n--- Alterando Espaco (ID: %d) ---\n", noParaAlterar->id_espaco);
         printf(" [1] Nome: \t\t%s\n", noParaAlterar->nome);
         printf(" [2] Descricao: \t%s\n", noParaAlterar->descricao);
@@ -513,7 +513,7 @@ void alterarEspaco(espacocomum *listaCabeca)
         printf("Qual campo deseja alterar? ");
         scanf("%d", &opcaoAlterar);
 
-        /* 3. A pessoa decide e pode digitar a alteração */
+        /* 3. A pessoa decide e pode digitar a altera??o */
         switch (opcaoAlterar) {
             case 1:
                 printf("Digite o NOVO Nome: ");
@@ -539,73 +539,73 @@ void alterarEspaco(espacocomum *listaCabeca)
                 break;
         }
 
-    } while (opcaoAlterar != 0); /* O loop continua até o usuário digitar 0 */
+    } while (opcaoAlterar != 0); /* O loop continua at? o usu?rio digitar 0 */
 }
 
-/* Exibe o menu de agendamentos e chama as funções correspondentes.*/
+/* Exibe o menu de agendamentos e chama as fun??es correspondentes.*/
 void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos) 
 {
     int opcoesubmenu;
     do
     {
-        printf("\n== Menu de agendamentos ==\nO que você deseja fazer?\n"
+        printf("\n== Menu de agendamentos ==\nO que voc? deseja fazer?\n"
                "[1] Novo agendamento\n"
                "[2] Consultar / Cancelar agendamento\n"
-               "[3] Ver Calendário do Dia\n"
+               "[3] Ver Calend?rio do Dia\n"
                "[0] Voltar ao Menu Principal\n");
         scanf("%d", &opcoesubmenu);
         
         switch (opcoesubmenu)
         {
             case 1:
-                /*Chama a função de cadastro, passando a lista */
+                /*Chama a fun??o de cadastro, passando a lista */
                 cadastrarNovoAgendamento(lista_agendamentos, listarespacos);
                 break;
             case 2:
-                /*Chama a função de consulta e cancelamento*/
+                /*Chama a fun??o de consulta e cancelamento*/
                 consultarECancelarAgendamento(lista_agendamentos);
                 break;
             case 3:
-                /*Chama a função de ver calendário do dia*/
+                /*Chama a fun??o de ver calend?rio do dia*/
                 verCalendarioDoDia(lista_agendamentos);
                 break;
             case 0:
-                break; /* Para não mostrar "opção inválida" ao sair */
+                break; /* Para n?o mostrar "op??o inv?lida" ao sair */
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Op??o inv?lida. Tente novamente.\n");
             break;
         }
     } while (opcoesubmenu != 0);
 }
 
-/* Pergunta ao usuário os dados de um novo espaço,
- * verifica se o ID já existe, e o cadastra. */
+/* Pergunta ao usu?rio os dados de um novo espa?o,
+ * verifica se o ID j? existe, e o cadastra. */
 void cadastrarNovoEspaco(espacocomum *listaCabeca)
 {
     int idespaco;
-    espacocomum *novo; /* Ponteiro para o novo nó */
+    espacocomum *novo; /* Ponteiro para o novo n? */
     
     printf("\n== Cadastrar Novo Espaco ==\n");
     printf("Digite o ID (numerico) para o novo espaco:\n");
     scanf("%d", &idespaco);
 
-    /*Checa se o ID já está em uso e sai da função*/
+    /*Checa se o ID j? est? em uso e sai da fun??o*/
     if (buscarEspacoPorID(listaCabeca, idespaco) != NULL)
     {
         printf("ERRO: O ID %d ja esta sendo usado por outro espaco.\n", idespaco);
         return;
     }
 
-    /*Se o ID está livre, aloca memória */
+    /*Se o ID est? livre, aloca mem?ria */
     novo = (espacocomum*) malloc(sizeof(espacocomum));
-    if (novo == NULL)/*verificação se memória foi alocada*/
+    if (novo == NULL)/*verifica??o se mem?ria foi alocada*/
     {
-        printf("ERRO CRITICO: Falha de alocacao de memoria para espaço!\n");
+        printf("ERRO CRITICO: Falha de alocacao de memoria para espa?o!\n");
         return;
     }
 
     /*Preenche os dados */
-    novo->id_espaco = idespaco; /* Guarda o ID que já validamos */
+    novo->id_espaco = idespaco; /* Guarda o ID que j? validamos */
 
     printf("Digite o Nome do espaco:\n");
     scanf(" %[^\n]", novo->nome); 
@@ -622,7 +622,7 @@ void cadastrarNovoEspaco(espacocomum *listaCabeca)
     printf("\nEspaco '%s' (ID: %d) cadastrado com sucesso!\n", novo->nome, novo->id_espaco);
 }
 
-/* Exibe o menu de gerenciamento de espaços e chama as funções correspondentes */
+/* Exibe o menu de gerenciamento de espa?os e chama as fun??es correspondentes */
 void menuEspacos(espacocomum *lista_espacos)
 {
     int opcoesubmenu;
@@ -642,15 +642,15 @@ void menuEspacos(espacocomum *lista_espacos)
                 cadastrarNovoEspaco(lista_espacos);
                 break;
             case 2:
-                /* Chama a função de alterar espaço */
+                /* Chama a fun??o de alterar espa?o */
                 alterarEspaco(lista_espacos);
                 break;
             case 3:
-                /* Chama a função de listar todos os espaços */
+                /* Chama a fun??o de listar todos os espa?os */
                 listarEspacosSimples(lista_espacos);
                 break;
             case 0:
-                /* Não faz nada, só para o loop não dar "opção inválida" */
+                /* N?o faz nada, s? para o loop n?o dar "op??o inv?lida" */
                 break;
             default:
                 printf("Opcao invalida. Tente novamente.\n");
@@ -666,20 +666,20 @@ int main()
     espacocomum *lista_espacos;
     agendamento *lista_agendamentos;
 
-    /*Criação de lista com cabeça para melhorar funções de inserção*/
+    /*Cria??o de lista com cabe?a para melhorar fun??es de inser??o*/
     lista_solicitantes = criaListaSolicitantes();
     lista_espacos = criaListaEspacos();
     lista_agendamentos = criaListaAgendamentos();
     
-    /*Checagem de segurança se as lista foram iniciadas coma cabeça*/
+    /*Checagem de seguran?a se as lista foram iniciadas coma cabe?a*/
     if (lista_solicitantes == NULL || lista_espacos == NULL || lista_agendamentos == NULL) {
         printf("ERRO 1: Falha ao alocar memoria para as listas.\n");
         return 1; /* Encerra o programa*/
     }
     
     do{
-        printf("== SISTEMA DE CONTROLE agendamentoS DE ÁREAS ==\nO que você deseja fazer?\n");
-        printf("[1] agendamentos\n[2] Gerenciar Espaços\n[3] Gerenciar solicitantes\n[4] Relatórios\n[0] Sair\n");
+        printf("== SISTEMA DE CONTROLE agendamentoS DE ?REAS ==\nO que voc? deseja fazer?\n");
+        printf("[1] agendamentos\n[2] Gerenciar Espa?os\n[3] Gerenciar solicitantes\n[4] Relat?rios\n[0] Sair\n");
         scanf("%d", &opcao); 
 
         switch (opcao)
@@ -693,7 +693,7 @@ int main()
             case 3:
                 do
                 {
-                    printf("\n== Menu de solicitantes ==\nO que você deseja fazer?\n[1] Cadastrar Novo solicitante\n[2] Alterar solicitante\n[3] Listar solicitantes\n[0] Voltar ao Menu Principal\n");
+                    printf("\n== Menu de solicitantes ==\nO que voc? deseja fazer?\n[1] Cadastrar Novo solicitante\n[2] Alterar solicitante\n[3] Listar solicitantes\n[0] Voltar ao Menu Principal\n");
                     scanf("%d", &opcoesubmenu);
                     switch (opcoesubmenu)
                     {
@@ -707,7 +707,7 @@ int main()
                             /* code */
                             break;
                         default:
-                        printf("Opção inválida. Tente novamente.\n");
+                        printf("Op??o inv?lida. Tente novamente.\n");
                         break;
                     }
                 } while (opcoesubmenu != 0);
@@ -719,7 +719,7 @@ int main()
                 printf("Saindo do sistema.\n");
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Op??o inv?lida. Tente novamente.\n");
                 break;
             }
     }while(opcao != 0);
