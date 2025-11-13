@@ -1,6 +1,9 @@
 #ifndef ESPACOCOMUM_H
 #define ESPACOCOMUM_H
 
+struct agendamento;  /*Declaração antecipada para evitar dependências circulares*/ 
+
+
 /*Registro dos dados para espaços*/
 typedef struct espacocomum
 {
@@ -21,6 +24,8 @@ espacocomum* buscarEspacoPorID(espacocomum *listaCabeca, int idBusca);
 void cadastrarNovoEspaco(espacocomum *listaCabeca);
 void alterarEspaco(espacocomum *listaCabeca);
 void listarEspacosSimples(espacocomum *listaCabeca);
-void menuEspacos(espacocomum *lista_espacos);
+void removeEspaco(espacocomum *noParaApagar);
+void menuExcluirEspaco(espacocomum *listaCabecaEsp, struct agendamento *listaCabecaAg);
+void menuEspacos(espacocomum *lista_espacos, struct agendamento *lista_agendamentos);
 
 #endif

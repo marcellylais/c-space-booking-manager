@@ -3,6 +3,8 @@
 #include <time.h>
 #include <string.h>
 #include "agendamento.h" 
+#include "espacocomum.h"
+#include "solicitantes.h"
 
 agendamento* criaListaAgendamentos()
 {
@@ -87,8 +89,11 @@ void insereAgendamentoOrdenado(agendamento *no, agendamento *novoAgendamento)
 
 /* Função principal para cadastrar um novo agendamento.
  * Pede os dados ao usuário, VERIFICA, aloca memória e insere na lista se disponivel.*/
-void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespacos)
+void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespacos, solicitante *listasolicitantes)
 {   
+    int aux_espaco_id, aux_solicitante_unidade;
+    espacocomum *espacoselecionado;
+    solicitante *solicitanteselecionado;
     /* Aloca memória para o novo nó*/
     agendamento *novo = (agendamento*) malloc(sizeof(agendamento));
     if (novo == NULL) /*verificação se memória foi alocada*/
@@ -100,13 +105,39 @@ void cadastrarNovoAgendamento(agendamento *listaCabeca, espacocomum *listarespac
     /*Coleta os dados do usuário*/
     printf("\n== Novo Agendamento ==\n");
     printf("\nDigite a unidade do solicitante:\n");
-    scanf("%d", &novo->unidade_solicitante);
+    scanf("%d", &aux_solicitante_unidade);
+
+    solicitanteselecionado = buscarSolicitantePorUnidade(listasolicitantes, aux_solicitante_unidade);
+    if(solicitanteselecionado == NULL)
+    {
+        printf("\nERRO: nidade %d nao encontrada. Cancelando cadastro de agendamento.\n", aux_solicitante_unidade);
+        free(novo); /* libera memoria alocada para novo agendamento!*/
+        return;
+    }
+    else
+    {
+        novo->unidade_solicitante = solicitanteselecionado->unidade;
+    }
 
     /* Mostra a lista de espaços para o usuário */
     listarEspacosSimples(listarespacos);
 
     printf("Digite o ID do espaco desejado: ");
-    scanf("%d", &novo->id_do_espaco);
+    scanf("%d", &aux_espaco_id);
+
+    /* Verifica se o espaço existe */
+    espacoselecionado = buscarEspacoPorID(listarespacos, aux_espaco_id);
+
+    if(espacoselecionado == NULL)
+    {
+        printf("\nERRO: Espaco com ID %d nao encontrado. Cancelando cadastro de agendamento.\n", aux_espaco_id);
+        free(novo); /* libera memoria alocada para novo agendamento!*/
+        return;
+    }
+    else
+    {
+        novo->id_do_espaco = espacoselecionado->id_espaco;
+    }
 
     printf("\nDigite a data do agendamento (DD/MM/AAAA):\n");
     scanf("%d/%d/%d", &novo->data_agendamento.dia, &novo->data_agendamento.mes, &novo->data_agendamento.ano);
@@ -302,7 +333,45 @@ void consultarECancelarAgendamento(agendamento *listaCabeca)
     removeAgendamento(atual); /* Chama a funçãoo de remoção */
 }
 
-void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos) 
+void excluirAgendamentosEmCascata(agendamento *listaCabecaAg, int idparaexclusao, char tipoexclusao)
+{
+    agendamento *aux, *aux2;
+ 
+    aux = listaCabecaAg->prox;
+
+    /* Verifica o tipo de exclusão: 'S' para solicitante, 'E' para espaço comum */
+    if (tipoexclusao == 'S')
+    {
+        /* Exclusão em cascata dos agendamentos para solicitante */
+        while (aux != NULL)
+        {
+            aux2 = aux->prox; /* Armazena o próximo nó antes de possivelmente remover o atual */
+            if (aux->unidade_solicitante == idparaexclusao)
+            {
+                removeAgendamento(aux);
+            }
+
+            aux = aux2; /* Move para o próximo nó */
+        }
+    }
+
+    else if (tipoexclusao == 'E')
+    {
+        /* Exclusão em cascata de agendamentos no espaço comum excluido */
+        while (aux != NULL)
+        {
+            aux2 = aux->prox; /* Armazena o próximo nó antes de possivelmente remover o atual */
+            if (aux->id_do_espaco == idparaexclusao)
+            {
+                removeAgendamento(aux);
+            }
+
+            aux = aux2; /* Move para o próximo nó */
+        }
+    }
+}
+
+void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos, solicitante *listasolicitantes) 
 {
     int opcoesubmenu;
     do
@@ -318,7 +387,7 @@ void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos
         {
             case 1:
                 /*Chama a função de cadastro, passando a lista */
-                cadastrarNovoAgendamento(lista_agendamentos, listarespacos);
+                cadastrarNovoAgendamento(lista_agendamentos, listarespacos, listasolicitantes);
                 break;
             case 2:
                 /*Chama a função de consulta e cancelamento*/

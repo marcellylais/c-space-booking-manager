@@ -1,6 +1,8 @@
 #include <stdio.h> 
 #include <string.h> /*para alterar nome e descrição dos espaços*/
 #include <stdlib.h> /* Para malloc e free*/
+
+#include "agendamento.h"
 #include "espacocomum.h"
 
 /*Cria ponteiro para lista de espaços, ponteiro vazio pois será uma lista com cabeça*/
@@ -206,8 +208,75 @@ void listarEspacosSimples(espacocomum *listaCabeca)
     printf("---------------------------\n");
 }
 
+/* * Funcao basica que remove um no 'espacocomum' da lista.
+ * (Assume que 'noParaApagar' nao e o no-cabeca) */
+void removeEspaco(espacocomum *noParaApagar)
+{
+    if (noParaApagar == NULL)
+    {
+        printf("ERRO CRITICO: Ponteiro nulo passado para removeEspaco().\n");
+        return;
+    }
+
+    noParaApagar->ant->prox = noParaApagar->prox;
+    
+    if (noParaApagar->prox != NULL)
+    {
+        noParaApagar->prox->ant = noParaApagar->ant;
+    }
+    
+    free(noParaApagar);
+}
+
+/* Funcao de "Menu" para excluir um espaco.
+ * Pede confirmacao ao usuario e chama a exclusao em cascata
+ * ANTES de apagar o espaco em si.*/
+void menuExcluirEspaco(espacocomum *listaCabecaEsp, agendamento *listaCabecaAg)
+{
+    int idespaco, confirm;
+    espacocomum *esp;
+
+    printf("\n== Excluir Espaco ==\n");
+    
+    /*Mostra a lista de espacos para o usuario saber o ID */
+    listarEspacosSimples(listaCabecaEsp);
+    
+    printf("Digite o ID do espaco a excluir (ou 0 para cancelar): ");
+    scanf("%d", &idespaco);
+
+    if (idespaco == 0)
+    {
+        printf("Operacao cancelada.\n");
+        return;
+    }
+
+    esp = buscarEspacoPorID(listaCabecaEsp, idespaco);
+    
+    if (esp == NULL)
+    {
+        printf("ERRO: Espaco com ID %d nao encontrado.\n", idespaco);
+        return;
+    }
+
+    /* Pede confirmacao */
+    printf("ATENCAO: Excluir o espaco '%s' (ID %d) cancelara TODOS os agendamentos desse espaço.\n", esp->nome, esp->id_espaco);
+    printf("Digite 1 para CONFIRMAR, 0 para cancelar: ");
+    scanf("%d", &confirm);
+
+    if (confirm == 1)
+    {
+        /* EXCLUI EM CASCATA OS AGENDAMENTOS RELACIONADOS A ESSE ESPACO */
+        excluirAgendamentosEmCascata(listaCabecaAg, idespaco, 'E');
+        removeEspaco(esp);
+        
+        printf("Espaco ID %d excluido com sucesso.\n", idespaco);
+    } else {
+        printf("Operacao cancelada.\n");
+    }
+}
+
 /* Exibe o menu de gerenciamento de espaços e chama as funções correspondentes */
-void menuEspacos(espacocomum *lista_espacos)
+void menuEspacos(espacocomum *lista_espacos, agendamento *lista_agendamentos)
 {
     int opcoesubmenu;
 
@@ -217,6 +286,7 @@ void menuEspacos(espacocomum *lista_espacos)
                "[1] Cadastrar Novo Espaco\n"
                "[2] Alterar Espaco\n"
                "[3] Listar Todos os Espacos\n"
+               "[4] Remover Espaco\n"
                "[0] Voltar ao Menu Principal\n");
         scanf("%d", &opcoesubmenu);
 
@@ -233,6 +303,10 @@ void menuEspacos(espacocomum *lista_espacos)
             case 3:
                 /* Chama a função de listar todos os espaços */
                 listarEspacosSimples(lista_espacos);
+                break;
+            case 4:
+                /* Chama a função de remover espaço */
+                menuExcluirEspaco(lista_espacos, lista_agendamentos);
                 break;
             case 0:
                 /* Finaliza o loop */

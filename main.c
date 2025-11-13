@@ -42,16 +42,16 @@ int main()
         switch (opcao)
         {
             case 1:
-                menuagendamento(lista_agendamentos, lista_espacos);
+                menuagendamento(lista_agendamentos, lista_espacos, lista_solicitantes);
                 break;
             case 2:
-                menuEspacos(lista_espacos);
+                menuEspacos(lista_espacos, lista_agendamentos);
                 break;
             case 3:
-                menuSolicitantes(lista_solicitantes);
+                menuSolicitantes(lista_solicitantes, lista_agendamentos);
                 break;
             case 4:
-                menuRelatorios(lista_agendamentos, lista_solicitantes, lista_espacos);
+                /*menuRelatorios(lista_agendamentos, lista_solicitantes, lista_espacos);*/
                 break;
             case 0:
                 printf("Saindo do sistema.\n");

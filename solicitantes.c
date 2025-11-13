@@ -11,6 +11,7 @@
 *                                               *
 *************************************************/ 
 #include "solicitantes.h"
+#include "agendamento.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -217,7 +218,7 @@ void listarTodosSolicitantes(solicitante *listaCabeca)
 }
 
 /* Exibe o menu de gerenciamento de solicitantes e chama as funcoes.*/
-void menuSolicitantes(solicitante *lista_solicitantes) 
+void menuSolicitantes(solicitante *lista_solicitantes, agendamento *listaCabecaAg) 
 {
     int opcoesubmenu;
 
@@ -226,6 +227,7 @@ void menuSolicitantes(solicitante *lista_solicitantes)
                "[1] Cadastrar Novo Solicitante\n"
                "[2] Alterar Solicitante\n"
                "[3] Listar Todos os Solicitantes\n"
+               "[4] Excluir Solicitante\n"
                "[0] Voltar ao Menu Principal\n");
         scanf("%d", &opcoesubmenu);
 
@@ -240,6 +242,9 @@ void menuSolicitantes(solicitante *lista_solicitantes)
             case 3:
                 listarTodosSolicitantes(lista_solicitantes);
                 break;
+            case 4:
+                menuExcluirSolicitante(lista_solicitantes, listaCabecaAg);
+                break;
             case 0:
                 /* encerra o loop */
                 break;
@@ -248,4 +253,55 @@ void menuSolicitantes(solicitante *lista_solicitantes)
                 break;
         }
     } while (opcoesubmenu != 0);
+}
+
+
+void removeSolicitante(solicitante *noParaApagar)
+{
+    if (noParaApagar == NULL)
+    {
+        printf("ERRO CRITICO: Ponteiro nulo passado para removeSolicitante().\n");
+        return;
+    }
+
+    noParaApagar->ant->prox = noParaApagar->prox;
+    
+    if (noParaApagar->prox != NULL)
+    {
+        noParaApagar->prox->ant = noParaApagar->ant;
+    }
+    
+    free(noParaApagar);
+}
+
+void menuExcluirSolicitante(solicitante* listaCabecaSol, agendamento *listaCabecaAg)
+{
+    int idunidade, confirm;
+    solicitante *sol;
+    
+    printf("\n== Excluir Solicitante ==\n");
+    printf("Digite a Unidade do solicitante que deseja excluir: ");
+    scanf("%d", &idunidade);
+
+    sol = buscarSolicitantePorUnidade(listaCabecaSol, idunidade);
+    if (sol == NULL)
+    {
+        printf("ERRO: Solicitante da Unidade %d nao encontrado.\n", idunidade);
+        return;
+    }
+
+    printf("ATENCAO: Excluir o solicitante '%s' (Unidade %d) cancelara TODOS os agendamentos desse solicitante.\n", sol->nome, sol->unidade);
+    printf("Digite 1 para CONFIRMAR, 0 para cancelar: ");
+    scanf("%d", &confirm);
+
+    if (confirm == 1)
+    {
+        /* EXCLUI EM CASCATA OS AGENDAMENTOS RELACIONADOS A ESSE SOLICITANTE */
+        excluirAgendamentosEmCascata(listaCabecaAg, idunidade, 'S');
+        removeSolicitante(sol);
+        
+        printf("Solicitante Unidade %d excluido com sucesso.\n", idunidade);
+    } else {
+        printf("Operacao cancelada.\n");
+    }
 }
