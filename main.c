@@ -1,3 +1,19 @@
+/************************************************
+*                                               *
+* Nome: Marcelly Lais Ferreira de Almeida       *
+* Trabalho Prático                              *
+* Disciplinas: Algoritmos e Programação II      *
+* Laboratório de Algoritmos e Programação II    *
+* Professores: Ivone e Ronaldo                  *
+* Data: 14/11/2025                              *
+* Versão: 1                                     *
+* Descrição: Arquivo principal do sistema.      *
+* Contem a funcao 'main', o loop do menu        *
+* principal, a inicializacao e a finalizacao    *
+* (salvamento/liberacao) das listas.            *
+*                                               *
+*************************************************/ 
+
 /* Bibliotecas principais */
 #include <stdio.h> 
 #include <string.h>
@@ -11,11 +27,12 @@
 #include "solicitantes.h"
 #include "espacocomum.h"
 #include "relatorios.h"
+#include "persistencia.h"
 
 
 int main()
 {    
-    int opcao;
+    int opcao, salvar;
     
     /* Declara os ponteiros para as listas */
     solicitante *lista_solicitantes;
@@ -34,6 +51,9 @@ int main()
         return 1; /* Encerra o programa*/
     }
     
+    /* Carrega os dados salvos em disco */
+    carregarDados(lista_espacos, lista_solicitantes,  lista_agendamentos);
+
     do{
         printf("== SISTEMA DE CONTROLE AGENDAMENTOS DE AREAS ==\nO que voce deseja fazer?\n");
         printf("[1] Agendamentos\n[2] Gerenciar Espacos\n[3] Gerenciar Solicitantes\n[4] Relatorios\n[0] Sair\n");
@@ -51,10 +71,19 @@ int main()
                 menuSolicitantes(lista_solicitantes, lista_agendamentos);
                 break;
             case 4:
-                /*menuRelatorios(lista_agendamentos, lista_solicitantes, lista_espacos);*/
+                menuRelatorios(lista_agendamentos, lista_solicitantes, lista_espacos);
                 break;
             case 0:
-                printf("Saindo do sistema.\n");
+                salvar = salvarDados(lista_espacos, lista_solicitantes, lista_agendamentos);
+                if (salvar != 0)
+                {
+                    printf("ERRO 2: Falha ao salvar os dados no disco.\n");
+                    opcao = -1; /* Mantem o loop para tentar salvar novamente */
+                }
+                else
+                {
+                    printf("Saindo do sistema.\n");
+                }
                 break;
             default:
                 printf("Opcao invalida. Tente novamente.\n");
@@ -62,5 +91,8 @@ int main()
         }
     }while(opcao != 0);
     
+    /* ASQUIIIIIIIIIIIIII Libera a memoria alocada para as listas antes de encerrar o programa */
+    /*liberaListaAgendamentos(lista_agendamentos);*/
+
     return 0;
 }

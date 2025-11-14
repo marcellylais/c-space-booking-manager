@@ -9,7 +9,7 @@ typedef struct espacocomum
 {
     int id_espaco;
     char nome[100];
-    char descricao[255];
+    char descricao[300];
     int capacidade;
     struct espacocomum *ant;
     struct espacocomum *prox;

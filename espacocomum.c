@@ -1,3 +1,17 @@
+/************************************************
+*                                               *
+* Nome: Marcelly Lais Ferreira de Almeida       *
+* Trabalho Prático                              *
+* Disciplinas: Algoritmos e Programação II      *
+* Laboratório de Algoritmos e Programação II    *
+* Professores: Ivone e Ronaldo                  *
+* Data: 14/11/2025                              *
+* Versão: 1                                     *
+* Descrição: Implementa as funcoes do modulo    *
+* 'espacocomum'. Inclui o Cadastrar, Alterar,   *
+* Listar), a busca por ID e as funcoes de menu  *
+*************************************************/
+
 #include <stdio.h> 
 #include <string.h> /*para alterar nome e descrição dos espaços*/
 #include <stdlib.h> /* Para malloc e free*/

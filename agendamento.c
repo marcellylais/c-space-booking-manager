@@ -1,3 +1,18 @@
+/*****************************************************************
+*                                                                *
+* Nome: Marcelly Lais Ferreira de Almeida                        *
+* Trabalho Prático                                               *
+* Disciplinas: Algoritmos e Programação II                       *
+* Laboratório de Algoritmos e Programação II                     *
+* Professores: Ivone e Ronaldo                                   *
+* Data: 14/11/2025                                               *
+* Versão: 1                                                      *
+* Descrição: Implementa o modulo de agendamentos.                *
+* Contem as funcoes de cadastro, cancelamento, verificacao de    *
+* disponibilidade, listagem e o 'motor' da exclusao em cascata.  *
+*                                                                *
+******************************************************************/ 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
