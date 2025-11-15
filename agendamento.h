@@ -26,6 +26,8 @@ void verCalendarioDoDia(agendamento *listaCabeca);
 void removeAgendamento(agendamento *noParaApagar);
 void consultarECancelarAgendamento(agendamento *listaCabeca);
 void excluirAgendamentosEmCascata(agendamento *listaCabecaAg, int idRelacionado, char tipoRelacionado);
+
+void menuAgendamentoRecorrente(agendamento *listaAg, espacocomum *listaEsp, solicitante *listaSol);
 void menuagendamento(agendamento *lista_agendamentos, espacocomum *lista_espacos, solicitante *lista_solicitantes);
 
 #endif /* Fim do agendamento.h */

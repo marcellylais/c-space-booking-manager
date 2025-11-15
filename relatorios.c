@@ -21,19 +21,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void impressaoRelatorio(relatorio *rel)
+void impressaoRelatorio(relatorio *rel, char *nome_arquivo)
 {
-    relatorio *atual = rel;
+    FILE *arquivo = fopen(nome_arquivo, "w");
+    relatorio *atual = rel, *aux;
+    if (arquivo == NULL)
+    {
+        printf("ERRO: Nao foi possivel criar o arquivo %s para salvar o relatorio.\n", nome_arquivo);
+        return;
+    }
 
     if (atual == NULL)
     {
         return;
     }
 
+    fprintf(arquivo, "== Relatorio de Agendamentos ==\n");
     printf("\n== Relatorio de Agendamentos ==\n");
 
     while (atual != NULL)
     {
+        /*ESCREVE NO ARQUIVO*/
+        fprintf(arquivo, "----------------------------------------\n");
+        fprintf(arquivo, " Unidade Solicitante: %d\n", atual->listaSolicitantes->unidade);
+        fprintf(arquivo, " Nome Solicitante: %s\n", atual->listaSolicitantes->nome);
+        fprintf(arquivo, " Espaco Comum: %s (ID: %d)\n", atual->listaEspacos->nome, atual->listaEspacos->id_espaco);
+        fprintf(arquivo, " Data do Agendamento: %02d/%02d/%d\n",
+                atual->listaAgendamentos->data_agendamento.dia,
+                atual->listaAgendamentos->data_agendamento.mes,
+                atual->listaAgendamentos->data_agendamento.ano);
+        /*IMPRIME NA TELA*/
         printf("----------------------------------------\n");
         printf(" Unidade Solicitante: %d\n", atual->listaSolicitantes->unidade);
         printf(" Nome Solicitante: %s\n", atual->listaSolicitantes->nome);
@@ -42,10 +59,16 @@ void impressaoRelatorio(relatorio *rel)
                atual->listaAgendamentos->data_agendamento.dia,
                atual->listaAgendamentos->data_agendamento.mes,
                atual->listaAgendamentos->data_agendamento.ano);
-        
+        aux = atual;
         atual = atual->prox;
+        /* Libera o nó atual */
+        free(aux);
     }
+    fprintf(arquivo, "----------------------------------------\n");
+    fclose(arquivo);
     printf("----------------------------------------\n");
+    printf("Relatorio salvo no arquivo %s com sucesso.\n", nome_arquivo);
+
 }
 
 /* Implementação do relatório por data */
@@ -65,6 +88,7 @@ void relatorioPorData(agendamento *listaAg, solicitante *listaSol, espacocomum *
 void relatorioPorSolicitante(agendamento *listaAg, solicitante *listaSol, espacocomum *listaEsp)
 {
     relatorio *rel, *nova, *no_para_liberar;
+    char nome_arquivo[100];
     int unidade_solicitante, auxverifica = 0;
     solicitante *solicitanteauxiliar;
     agendamento *agenda = listaAg->prox; /* Pula o nó-cabeça */
@@ -84,6 +108,9 @@ void relatorioPorSolicitante(agendamento *listaAg, solicitante *listaSol, espaco
         printf("Não há nenhum agendamento registrado para nenhuma unidade.\n");
         return;
     }
+
+    printf("Digite o nome do arquivo para salvar o relatorio:\n");
+    scanf("%s", nome_arquivo);
 
     while (agenda != NULL)
     {
@@ -112,7 +139,7 @@ void relatorioPorSolicitante(agendamento *listaAg, solicitante *listaSol, espaco
         return;
     }
 
-    impressaoRelatorio(rel);
+    impressaoRelatorio(rel, nome_arquivo);
 
     while (rel != NULL)
     {
@@ -126,6 +153,7 @@ void relatorioPorSolicitante(agendamento *listaAg, solicitante *listaSol, espaco
 void relatorioPorEspaco(agendamento *listaAg, solicitante *listaSol, espacocomum *listaEsp)
 {
     relatorio *rel, *nova, *no_para_liberar;
+    char nome_arquivo[100];
     int espacosolicitante, auxverifica = 0;
     espacocomum *espacoauxiliar;
     agendamento *agenda = listaAg->prox; /* Pula o nó-cabeça */
@@ -145,6 +173,11 @@ void relatorioPorEspaco(agendamento *listaAg, solicitante *listaSol, espacocomum
         printf("Não há nenhum agendamento registrado para nenhum espaço.\n");
         return;
     }
+
+    printf("Digite o nome do arquivo para salvar o relatorio:\n");
+    scanf("%s", nome_arquivo);
+    /*aqui irei perguntar o nome do arquivo do relatorio que a pessoa deseja salvar, mando como pareamento
+    para função de impressão e salvo o arquivo com o nome indicado em txt*/
 
     while (agenda != NULL)
     {
@@ -173,7 +206,7 @@ void relatorioPorEspaco(agendamento *listaAg, solicitante *listaSol, espacocomum
         return;
     }
 
-    impressaoRelatorio(rel);
+    impressaoRelatorio(rel, nome_arquivo);
 
     while (rel != NULL)
     {

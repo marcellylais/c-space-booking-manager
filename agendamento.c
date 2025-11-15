@@ -198,9 +198,9 @@ void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, dat
         /* Compara a data do 'atual' com o fim do período */
         int comp_fim = compararDatas(atual->data_agendamento, dataFim);
 
-        /* Se comp_inicio >= 0 (data >= inicio) E comp_fim <= 0 (data <= fim),
+        /* Se comp_inicio <= 0 (data <= inicio) E comp_fim >= 0 (data >= fim),
          * então o agendamento está DENTRO do período.*/
-        if (comp_inicio >= 0 && comp_fim <= 0)
+        if (comp_inicio <= 0 && comp_fim >= 0)
         {
             printf("  - Data: %02d/%02d/%d | Unidade: %d | Espaco: %d\n",
                    atual->data_agendamento.dia,
@@ -211,9 +211,9 @@ void listarAgendamentosPorPeriodo(agendamento *listaCabeca, data dataInicio, dat
             encontrou = 1;
         } 
 
-        /* Se a data do 'atual' já é MAIOR que a data FIM,
+        /* Se a data do 'atual' já é maior que a data FIM,
         * como a lista é ordenada, podemos parar a busca.*/
-        else if (comp_fim > 0)
+        else if (comp_fim < 0)
         {
             if (encontrou == 0)
             {
@@ -298,7 +298,7 @@ void consultarECancelarAgendamento(agendamento *listaCabeca)
         return; /* Sai da funçãoo se a lista está vazia */
     }
 
-    printf("Lista de Agendamentos (Ordenados por Data: da mais antiga a mais recente):\n");
+    printf("Lista de Agendamentos (Ordenados por Data: da mais recente a mais antiga):\n");
     while (atual != NULL)
     {
         /* Imprime os dados que estão nos registros de agendamento */
@@ -386,6 +386,100 @@ void excluirAgendamentosEmCascata(agendamento *listaCabecaAg, int idparaexclusao
     }
 }
 
+/* função de agendamento recorrente tenta agendar UMA data e chama a si mesma para a proxima data, N-1 vezes. */
+void agendarRecorrenteRecursivo(agendamento *listaAg, int idEspaco, int idSolicitante, data dataAtual, int diasIntervalo, int repeticoesRestantes)
+{
+    data proximaData;
+    /* Parada da recursao) */
+    if (repeticoesRestantes <= 0)
+    {
+        return;
+    }
+
+    /* Verifica se a data está disponível */
+    if (verificarDisponibilidade(listaAg, idEspaco, dataAtual) == 1) 
+    {
+        /* Disponivel. Cria o no. */
+        agendamento *novo = (agendamento*) malloc(sizeof(agendamento));
+        if (novo != NULL)
+        {
+            novo->unidade_solicitante = idSolicitante;
+            novo->id_do_espaco = idEspaco;
+            novo->data_agendamento = dataAtual;
+            
+            insereAgendamentoOrdenado(listaAg, novo);
+            printf("Agendamento para o dia %02d/%02d/%d no espaco %d cadastrado com sucesso!\n",
+           novo->data_agendamento.dia,
+           novo->data_agendamento.mes,
+           novo->data_agendamento.ano,
+           novo->id_do_espaco);
+        }
+        else
+        {
+            printf("Falha no agendamento para o dia %02d/%02d/%d no espaco %d!(erro de memoria)\n", 
+            dataAtual.dia, dataAtual.mes, dataAtual.ano, idEspaco);
+        }
+    }
+    else
+    {
+        printf("No dia %02d/%02d/%d o espaco %d ja esta ocupado!\n", 
+        dataAtual.dia, dataAtual.mes, dataAtual.ano, idEspaco);
+    }
+
+    
+    /* Calcula a proxima data */
+    proximaData = somarDias(dataAtual, diasIntervalo);
+    
+    /* Chama a si mesma com 1 repeticao a menos */
+    agendarRecorrenteRecursivo(listaAg, idEspaco, idSolicitante, proximaData, diasIntervalo, repeticoesRestantes - 1);
+}
+
+void menuAgendamentoRecorrente(agendamento *listaAg, espacocomum *listaEsp, solicitante *listaSol)
+{
+    int idEspaco, idSol, intervalo, repeticoes;
+    data dataInicial;
+    
+    printf("\n== Novo Agendamento Recorrente ==\n");
+    
+    /* Pede os dados basicos */
+    printf("Digite a unidade do solicitante: ");
+    scanf("%d", &idSol);
+    /* Valida o solicitante */
+    if (buscarSolicitantePorUnidade(listaSol, idSol) == NULL)
+    {
+        printf("ERRO: Solicitante nao encontrado.\n");
+        return;
+    }
+
+    listarEspacosSimples(listaEsp);
+    printf("Digite o ID do espaco: ");
+    scanf("%d", &idEspaco);
+    /* Valida o espaco */
+    if (buscarEspacoPorID(listaEsp, idEspaco) == NULL)
+    {
+        printf("ERRO: Espaco nao encontrado.\n");
+        return;
+    }
+
+    printf("Data do PRIMEIRO agendamento (DD/MM/AAAA): ");
+    scanf("%d/%d/%d", &dataInicial.dia, &dataInicial.mes, &dataInicial.ano);
+
+    printf("Intervalo em dias (ex: 1=diario, 7=semanal, 30=mensal): ");
+    scanf("%d", &intervalo);
+
+    printf("Quantas vezes deseja repetir? ");
+    scanf("%d", &repeticoes);
+
+    if (intervalo <= 0 || repeticoes <= 0)
+    {
+        printf("ERRO: Intervalo e repeticoes devem ser maiores que zero.\n");
+        return;
+    }
+
+    /* Dispara a recursao */
+    agendarRecorrenteRecursivo(listaAg, idEspaco, idSol, dataInicial, intervalo, repeticoes);
+}
+
 void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos, solicitante *listasolicitantes) 
 {
     int opcoesubmenu;
@@ -395,6 +489,7 @@ void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos
                "[1] Novo agendamento\n"
                "[2] Consultar / Cancelar agendamento\n"
                "[3] Ver Calendário do Dia\n"
+               "[4] Agendamento recorrente\n"
                "[0] Voltar ao Menu Principal\n");
         scanf("%d", &opcoesubmenu);
         
@@ -411,6 +506,10 @@ void menuagendamento(agendamento *lista_agendamentos, espacocomum *listarespacos
             case 3:
                 /*Chama a função de ver calendário do dia*/
                 verCalendarioDoDia(lista_agendamentos);
+                break;
+            case 4:
+                /*Chama a função de agendamento recorrente*/
+                menuAgendamentoRecorrente(lista_agendamentos, listarespacos, listasolicitantes);
                 break;
             case 0:
                 break; /* Para não mostrar "opção inválida" ao sair */

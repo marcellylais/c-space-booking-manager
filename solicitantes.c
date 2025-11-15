@@ -257,7 +257,6 @@ void menuSolicitantes(solicitante *lista_solicitantes, agendamento *listaCabecaA
     } while (opcoesubmenu != 0);
 }
 
-
 void removeSolicitante(solicitante *noParaApagar)
 {
     if (noParaApagar == NULL)

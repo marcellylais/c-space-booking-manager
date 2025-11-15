@@ -91,8 +91,27 @@ int main()
         }
     }while(opcao != 0);
     
-    /* ASQUIIIIIIIIIIIIII Libera a memoria alocada para as listas antes de encerrar o programa */
-    /*liberaListaAgendamentos(lista_agendamentos);*/
+    /* Libera a memoria alocada para as listas */
+    while (lista_agendamentos != NULL)
+    {
+        agendamento *aux = lista_agendamentos;
+        lista_agendamentos = lista_agendamentos->prox;
+        free(aux);
+    }
+    while (lista_espacos != NULL)
+    {
+        espacocomum *aux = lista_espacos;
+        lista_espacos = lista_espacos->prox;
+        free(aux);
+    }
+    while (lista_solicitantes != NULL)
+    {
+        solicitante *aux = lista_solicitantes;
+        lista_solicitantes = lista_solicitantes->prox;
+        free(aux);
+    }
+
+    
 
     return 0;
 }

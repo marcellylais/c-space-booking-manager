@@ -15,4 +15,7 @@ typedef struct
    1  se data1 > data2 */
 int compararDatas(data data1, data data2);
 
+/* Soma um número de dias a uma data.
+   Retorna a nova data resultante. */
+data somarDias(data dataInicial, int diasASomar);
 #endif

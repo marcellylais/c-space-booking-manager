@@ -15,7 +15,7 @@ typedef struct relatorio
 } relatorio;
 
 /* Relatórios específicos */
-void impressaoRelatorio(relatorio *rel);
+void impressaoRelatorio(relatorio *rel, char *nome_arquivo);
 void relatorioPorData(agendamento *listaAg, solicitante *listaSol, espacocomum *listaEsp);
 void relatorioPorSolicitante(agendamento *listaAg, solicitante *listaSol, espacocomum *listaEsp);
 void relatorioPorEspaco(agendamento *listaAg, solicitante *listaSol, espacocomum *listaEsp);
