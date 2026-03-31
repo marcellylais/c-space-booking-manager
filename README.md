@@ -22,8 +22,8 @@ Para garantir a performance do sistema, foram aplicados conceitos avançados de 
 
 ## Estrutura do projeto
 
-    * **main.c:** Ponto de entrada e menus principais.
-    * **agendamento.c/h:** Lógica de reservas e verificação de datas.
-    * **solicitantes.c/h:** Gerenciamento de usuários/unidades.
-    * **espacocomum.c/h:** Controle de áreas físicas.
-    * **datas.c/h:** Funções auxiliares de comparação de tempo.
+* **main.c:** Ponto de entrada e menus principais.
+* **agendamento.c/h:** Lógica de reservas e verificação de datas.
+* **solicitantes.c/h:** Gerenciamento de usuários/unidades.
+* **espacocomum.c/h:** Controle de áreas físicas.
+* **datas.c/h:** Funções auxiliares de comparação de tempo.
